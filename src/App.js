@@ -7,7 +7,7 @@ function App() {
   const [pokemonNames, setPokemonNames] = useState([]);
 
   // 仮でポケモンデータを配列にする
-  const pokemon = [
+  const pokemons = [
     {
       id : 1,
       image : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
@@ -48,24 +48,17 @@ function App() {
         <h1>ポケモン図鑑</h1>
         <div className='pokemon-container'>
           <div className='all-container'>
-            <PokemonThumbnails 
-              id = {pokemon[0].id}
-              name = {pokemonNames[0]}
-              image = {pokemon[0].image}
-              type = {pokemon[0].type}
-            />
-            <PokemonThumbnails 
-              id = {pokemon[1].id}
-              name = {pokemonNames[1]}
-              image = {pokemon[1].image}
-              type = {pokemon[1].type}
-            />
-            <PokemonThumbnails 
-              id = {pokemon[2].id}
-              name = {pokemonNames[2]}
-              image = {pokemon[2].image}
-              type = {pokemon[2 ].type}
-            />
+            {
+              pokemons.map((pokemon, index)=> (
+                <PokemonThumbnails 
+                  id = {pokemon.id}
+                  name = {pokemonNames[index]}
+                  image = {pokemon.image}
+                  type = {pokemon.type}
+                />
+              ))
+            }
+
           </div>
         </div>
     </div>
