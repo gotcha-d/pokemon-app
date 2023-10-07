@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import PokemonThumbnails from './PokemonThumbnails';
+import pokemonJson from './pokemon.json';
+import pokemonTypeJson from './pokemonType.json';
 
 function App() {
 
@@ -30,18 +32,22 @@ function App() {
       const pokemonUrl = `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`
       fetch(pokemonUrl)
         .then(res => res.json())
-        .then(data => {
+        .then(async data => {
           // 画像
           const _image = data.sprites.other["official-artwork"].front_default;
           const _iconImage = data.sprites.other.dream_world.front_default
           // ポケモンのタイプ
           const _type = data.types[0].type.name;
+          // 日本語へ変換
+          const japanese = await translateToJapanese(data.name, _type);
           const newItem = {
             id: data.id,
             name: data.name,
             image: _image,
             iconImage: _iconImage,
-            type : _type
+            type : _type,
+            jpName : japanese.name,
+            jpType : japanese.type
           };
           // 既存のデータを展開し、新しいデータを追加する
           setAllPokemons(currentList => [...currentList, newItem].sort((a, b) => a.id - b.id));
@@ -49,6 +55,13 @@ function App() {
     });
   }
 
+  const translateToJapanese = async (name, type) => {
+    const jpName = await pokemonJson.find(
+      pokemon => pokemon.en.toLocaleLowerCase() === name
+    ).ja;
+    const jpType = await pokemonTypeJson[type]
+    return { name: jpName, type: jpType }
+  }
   useEffect(()=> {
     getAllPokemons();
   }, [])
@@ -62,10 +75,11 @@ function App() {
               allPokemons.map((pokemon, index)=> (
                 <PokemonThumbnails 
                   id = {pokemon.id}
-                  name = {pokemon.name}
+                  name = {pokemon.jpName}
                   image = {pokemon.image}
                   iconImage = {pokemon.iconImage}
                   type = {pokemon.type}
+                  jptype = {pokemon.jpType}
                   key = {index}
                 />
               ))
