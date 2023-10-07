@@ -62,9 +62,11 @@ function App() {
                 />
               ))
             }
-
           </div>
         </div>
+        <button className='load-more' onClick={getAllPokemons}>
+          もっと見る
+        </button>
     </div>
   );
 }
