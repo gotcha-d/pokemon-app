@@ -4,7 +4,7 @@ import PokemonThumbnails from './PokemonThumbnails';
 
 function App() {
 
-  const [pokemonNames, setPokemonNames] = useState([]);
+  const [allPokemons, setAllPokemons] = useState([]);
 
   // 仮でポケモンデータを配列にする
   const pokemons = [
@@ -26,21 +26,38 @@ function App() {
   ];
 
   // APIからデータを取得する
-  const url = "https://pokeapi.co/api/v2/pokemon";
+  // パラメータにlimitを設定し、20件取得する
+  const [url, setUrl] = useState("https://pokeapi.co/api/v2/pokemon?limit=20");
 
-  useEffect(()=> {
+  const getAllPokemons = () => {
     fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        console.log(data);
-        // 仮で3つのポケモンの名前をセットする
-        const names = [
-          data.results[0].name,
-          data.results[1].name,
-          data.results[2].name,
-        ];
-        setPokemonNames(names);
-      })
+    .then(res => res.json())
+    .then(data => {
+      console.log(data.results);
+      setAllPokemons(data);
+      
+      // 次の20件セット
+      setUrl(data.next)
+    })
+  }
+
+  // 仮でフシギダネのURLを使う
+  const pokemonUrl = "https://pokeapi.co/api/v2/pokemon/bulbasaur";
+  const createPokemonObject = () => {
+    fetch(pokemonUrl)
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+      // 画像パス
+      console.log(data.sprites.other["official-artwork"].front_default);
+      // ポケモンのタイプ
+      console.log(data.types[0].type.name);
+    })
+
+  }
+  useEffect(()=> {
+    getAllPokemons();
+    createPokemonObject();
   }, [])
 
   return (
@@ -52,7 +69,7 @@ function App() {
               pokemons.map((pokemon, index)=> (
                 <PokemonThumbnails 
                   id = {pokemon.id}
-                  name = {pokemonNames[index]}
+                  name = {allPokemons[index]?.name}
                   image = {pokemon.image}
                   type = {pokemon.type}
                 />
