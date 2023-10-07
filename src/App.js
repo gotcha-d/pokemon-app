@@ -6,25 +6,6 @@ function App() {
 
   const [allPokemons, setAllPokemons] = useState([]);
 
-  // 仮でポケモンデータを配列にする
-  const pokemons = [
-    {
-      id : 1,
-      image : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
-      type: "くさ"
-    },
-    {
-      id : 2,
-      image : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/2.png",
-      type: "くさ"
-    },
-    {
-      id : 3,
-      image : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png",
-      type: "くさ"
-    },
-  ];
-
   // APIからデータを取得する
   // パラメータにlimitを設定し、20件取得する
   const [url, setUrl] = useState("https://pokeapi.co/api/v2/pokemon?limit=20");
@@ -33,28 +14,34 @@ function App() {
     fetch(url)
     .then(res => res.json())
     .then(data => {
-      console.log(data.results);
-      setAllPokemons(data);
-      createPokemonObject(data.results);
       // 次の20件セット
       setUrl(data.next)
+      createPokemonObject(data.results);
     })
   }
 
   const createPokemonObject = (results) => {
     results.forEach(pokemon => {
       const pokemonUrl = `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`
-      console.log(pokemon)
       fetch(pokemonUrl)
-      .then(res => res.json())
-      .then(data => {
-        // 画像
-        console.log(data.sprites.other["official-artwork"].front_default);
-        // ポケモンのタイプ
-        console.log(data.types[0].type.name);
-      })     
+        .then(res => res.json())
+        .then(data => {
+          // 画像
+          const _image = data.sprites.other["official-artwork"].front_default;
+          // ポケモンのタイプ
+          const _type = data.types[0].type.name;
+          const newItem = {
+            id: data.id,
+            name: data.name,
+            image: _image,
+            type : _type
+          };
+          // 既存のデータを展開し、新しいデータを追加する
+          setAllPokemons(currentList => [...currentList, newItem]);
+        })     
     });
   }
+
   useEffect(()=> {
     getAllPokemons();
   }, [])
@@ -62,15 +49,16 @@ function App() {
   return (
     <div className="app-container">
         <h1>ポケモン図鑑</h1>
-        <div className='pokemon-container'>
+        <div className='pokemon-container'> 
           <div className='all-container'>
             {
-              pokemons.map((pokemon, index)=> (
+              allPokemons.map((pokemon, index)=> (
                 <PokemonThumbnails 
                   id = {pokemon.id}
-                  name = {allPokemons[index]?.name}
+                  name = {pokemon.name}
                   image = {pokemon.image}
                   type = {pokemon.type}
+                  key = {index}
                 />
               ))
             }
