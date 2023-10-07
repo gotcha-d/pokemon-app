@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import './App.css';
 import PokemonThumbnails from './PokemonThumbnails';
 
@@ -24,6 +25,17 @@ function App() {
     },
   ];
 
+  // APIからデータを取得する
+  const url = "https://pokeapi.co/api/v2/pokemon";
+
+  useEffect(()=> {
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+      })
+  }, [])
+  
   return (
     <div className="app-container">
         <h1>ポケモン図鑑</h1>
