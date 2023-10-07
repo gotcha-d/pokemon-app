@@ -4,6 +4,7 @@ import PokemonThumbnails from './PokemonThumbnails';
 
 function App() {
 
+  const [isLoading, setIsLoading] = useState(false);
   const [allPokemons, setAllPokemons] = useState([]);
 
   // APIからデータを取得する
@@ -11,12 +12,16 @@ function App() {
   const [url, setUrl] = useState("https://pokeapi.co/api/v2/pokemon?limit=20");
 
   const getAllPokemons = () => {
+    setIsLoading(true);
     fetch(url)
     .then(res => res.json())
     .then(data => {
       // 次の20件セット
       setUrl(data.next)
       createPokemonObject(data.results);
+    })
+    .finally(()=>{
+      setIsLoading(false);
     })
   }
 
@@ -64,9 +69,15 @@ function App() {
             }
           </div>
         </div>
-        <button className='load-more' onClick={getAllPokemons}>
-          もっと見る
-        </button>
+        {
+          isLoading ? (
+            <div className='load-more'>now loading ...</div>
+          ) : (
+            <button className='load-more' onClick={getAllPokemons}>
+              もっと見る
+            </button>
+          )
+        }
     </div>
   );
 }
