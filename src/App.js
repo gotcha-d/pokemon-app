@@ -33,12 +33,14 @@ function App() {
         .then(data => {
           // 画像
           const _image = data.sprites.other["official-artwork"].front_default;
+          const _iconImage = data.sprites.other.dream_world.front_default
           // ポケモンのタイプ
           const _type = data.types[0].type.name;
           const newItem = {
             id: data.id,
             name: data.name,
             image: _image,
+            iconImage: _iconImage,
             type : _type
           };
           // 既存のデータを展開し、新しいデータを追加する
@@ -62,6 +64,7 @@ function App() {
                   id = {pokemon.id}
                   name = {pokemon.name}
                   image = {pokemon.image}
+                  iconImage = {pokemon.iconImage}
                   type = {pokemon.type}
                   key = {index}
                 />
