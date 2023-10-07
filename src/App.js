@@ -35,29 +35,28 @@ function App() {
     .then(data => {
       console.log(data.results);
       setAllPokemons(data);
-      
+      createPokemonObject(data.results);
       // 次の20件セット
       setUrl(data.next)
     })
   }
 
-  // 仮でフシギダネのURLを使う
-  const pokemonUrl = "https://pokeapi.co/api/v2/pokemon/bulbasaur";
-  const createPokemonObject = () => {
-    fetch(pokemonUrl)
-    .then(res => res.json())
-    .then(data => {
-      console.log(data);
-      // 画像パス
-      console.log(data.sprites.other["official-artwork"].front_default);
-      // ポケモンのタイプ
-      console.log(data.types[0].type.name);
-    })
-
+  const createPokemonObject = (results) => {
+    results.forEach(pokemon => {
+      const pokemonUrl = `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`
+      console.log(pokemon)
+      fetch(pokemonUrl)
+      .then(res => res.json())
+      .then(data => {
+        // 画像
+        console.log(data.sprites.other["official-artwork"].front_default);
+        // ポケモンのタイプ
+        console.log(data.types[0].type.name);
+      })     
+    });
   }
   useEffect(()=> {
     getAllPokemons();
-    createPokemonObject();
   }, [])
 
   return (
