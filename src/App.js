@@ -1,25 +1,25 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import PokemonThumbnails from './PokemonThumbnails';
 
 function App() {
+
+  const [pokemonNames, setPokemonNames] = useState([]);
+
   // 仮でポケモンデータを配列にする
   const pokemon = [
     {
-        id : 1,
-      name : "フシギダネ",
+      id : 1,
       image : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
       type: "くさ"
     },
     {
-        id : 2,
-      name : "フシギダネ",
+      id : 2,
       image : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/2.png",
       type: "くさ"
     },
     {
-        id : 3,
-      name : "フシギダネ",
+      id : 3,
       image : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png",
       type: "くさ"
     },
@@ -33,9 +33,16 @@ function App() {
       .then(res => res.json())
       .then(data => {
         console.log(data);
+        // 仮で3つのポケモンの名前をセットする
+        const names = [
+          data.results[0].name,
+          data.results[1].name,
+          data.results[2].name,
+        ];
+        setPokemonNames(names);
       })
   }, [])
-  
+
   return (
     <div className="app-container">
         <h1>ポケモン図鑑</h1>
@@ -43,19 +50,19 @@ function App() {
           <div className='all-container'>
             <PokemonThumbnails 
               id = {pokemon[0].id}
-              name = {pokemon[0].name}
+              name = {pokemonNames[0]}
               image = {pokemon[0].image}
               type = {pokemon[0].type}
             />
             <PokemonThumbnails 
               id = {pokemon[1].id}
-              name = {pokemon[1].name}
+              name = {pokemonNames[1]}
               image = {pokemon[1].image}
               type = {pokemon[1].type}
             />
             <PokemonThumbnails 
               id = {pokemon[2].id}
-              name = {pokemon[2].name}
+              name = {pokemonNames[2]}
               image = {pokemon[2].image}
               type = {pokemon[2 ].type}
             />
