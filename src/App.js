@@ -17,8 +17,8 @@ function App() {
     .then(res => res.json())
     .then(data => {
       // 次の20件セット
-      setUrl(data.next)
       createPokemonObject(data.results);
+      setUrl(data.next)
     })
     .finally(()=>{
       setIsLoading(false);
@@ -44,8 +44,8 @@ function App() {
             type : _type
           };
           // 既存のデータを展開し、新しいデータを追加する
-          setAllPokemons(currentList => [...currentList, newItem]);
-        })     
+          setAllPokemons(currentList => [...currentList, newItem].sort((a, b) => a.id - b.id));
+        });
     });
   }
 
